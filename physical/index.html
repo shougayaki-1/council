@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>体育祭運営計画提案</title>
+    <!-- Beer CSS (Linked from local file if available, or CDN) -->
+    <link rel="stylesheet" href="../beer.css"> <!-- Assuming beer.css is in parent directory -->
+    <script type="module" src="https://cdn.jsdelivr.net/npm/beercss@3.5.1/dist/beercss.min.js"></script>
+    <!-- Material Design Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- Custom Styles (inspired by math2.html) -->
+    <style>
+        body {
+            font-family: var(--font, 'Inter', 'Noto Sans JP', sans-serif);
+        }
+        .content-container { /* Renamed from math-container for clarity */
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .content-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        header#app-header nav.primary {
+            padding: 1rem 1.5rem;
+        }
+
+        /* Sidebar Navigation List */
+        #sidebar-navigation ul {
+            list-style-type: none;
+            padding-left: 0;
+            margin-top: 0.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+        #sidebar-navigation li {
+            position: relative;
+            border-radius: var(--border-radius, 4px);
+            transition: background-color 0.2s;
+            width: 100%;
+        }
+        #sidebar-navigation li::before {
+            content: none;
+        }
+
+        #sidebar-navigation .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            text-decoration: none;
+            color: var(--on-surface);
+            border-radius: inherit;
+            transition: background-color 0.2s, color 0.2s;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        #sidebar-navigation .nav-link .nav-item-icon {
+            font-size: 1.25rem;
+            color: var(--on-surface-variant);
+            transition: color 0.2s;
+            flex-shrink: 0;
+        }
+        #sidebar-navigation .nav-link span {
+            white-space: normal;
+            word-break: break-word;
+            overflow-wrap: break-word;
+            flex-grow: 1;
+            min-width: 0;
+        }
+
+        #sidebar-navigation li:not(.active-item) .nav-link:hover {
+            background-color: var(--surface-container-hover, var(--active));
+            color: var(--primary);
+        }
+        #sidebar-navigation li:not(.active-item) .nav-link:hover .nav-item-icon {
+            color: var(--primary);
+        }
+
+        #sidebar-navigation li.active-item {
+            background-color: var(--primary-container);
+            border-left: 4px solid var(--primary);
+        }
+        #sidebar-navigation li.active-item .nav-link {
+            color: var(--on-primary-container);
+            font-weight: 500;
+            background-color: transparent;
+        }
+        #sidebar-navigation li.active-item .nav-link .nav-item-icon {
+            color: var(--primary);
+        }
+        
+        /* Sub-navigation items */
+        #sidebar-navigation ul ul {
+            margin-top: 0.25rem;
+            margin-left: 1rem; /* Indent sub-items */
+            padding-left: 0;
+        }
+        #sidebar-navigation ul ul .nav-link {
+            padding-left: 1.5rem; /* Further indent sub-item text */
+        }
+         #sidebar-navigation ul ul .nav-link .nav-item-icon {
+            font-size: 1rem; /* Smaller icon for sub-items */
+        }
+
+
+        .content-section-title { /* Renamed from problem-set-title */
+            border-bottom: 2px solid var(--outline-variant);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem; /* Increased margin */
+            margin-top:0; /* Ensure no extra top margin if it's the first thing in a card */
+        }
+        .content-card { /* Renamed from problem-card */
+            margin-bottom: 1.5rem;
+            background-color: var(--surface-container);
+        }
+        .content-card h3, .content-card h4, .content-card h5 {
+             margin-top: 1.5rem;
+             margin-bottom: 0.75rem;
+        }
+        .content-card h3.medium-title { color: var(--primary); }
+        .content-card h4 { font-weight: 500; }
+
+        .content-card ul, .content-card ol {
+            padding-left: 20px; /* Default padding for lists */
+            margin-bottom: 1rem;
+        }
+        .content-card ul li, .content-card ol li {
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+        }
+        .content-card ul ul, .content-card ol ol {
+            margin-top: 0.5rem;
+            margin-bottom: 0.5rem;
+            padding-left: 20px;
+        }
+
+
+        .hidden {
+            display: none !important;
+        }
+        
+        .main-content-area {
+            padding-top: 1rem; /* Add some padding at the top of the content area */
+        }
+    </style>
+</head>
+<body data-theme="light">
+
+    <header id="app-header">
+        <nav class="primary">
+            <h1 class="large-title">体育祭運営計画提案 2025</h1>
+            <p class="opacity-75">開成運動交流祭 成功のための具体的な組織体制と段階的準備・運営計画</p>
+        </nav>
+    </header>
+
+    <div id="main-grid-layout" class="grid large-padding">
+        <aside class="s12 m4 l3 xl2 padding">
+            <h6 class="medium-title">目次</h6>
+            <nav id="sidebar-navigation" class="content-container" style="max-height: calc(100vh - 200px); overflow-y: auto;">
+                <ul>
+                    <li><a href="#" data-target="content-introduction" class="nav-link"><i class="material-icons nav-item-icon">info</i><span>提案の前提と目的</span></a></li>
+                    <li>
+                        <a href="#" data-target="content-organization" class="nav-link"><i class="material-icons nav-item-icon">groups</i><span>1. 組織体制提案</span></a>
+                        <ul>
+                            <li><a href="#" data-target="content-org-committee" class="nav-link"><i class="material-icons nav-item-icon">gavel</i><span>1.1. 実行委員会</span></a></li>
+                            <li><a href="#" data-target="content-org-taipro" class="nav-link"><i class="material-icons nav-item-icon">sports_kabaddi</i><span>1.2. 体プロ</span></a></li>
+                            <li><a href="#" data-target="content-org-executive" class="nav-link"><i class="material-icons nav-item-icon">support_agent</i><span>1.3. 生徒会執行部</span></a></li>
+                            <li><a href="#" data-target="content-org-broadcast" class="nav-link"><i class="material-icons nav-item-icon">campaign</i><span>1.4. 放送局</span></a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#" data-target="content-schedule" class="nav-link"><i class="material-icons nav-item-icon">calendar_month</i><span>2. 推進スケジュール案</span></a>
+                         <ul>
+                            <li><a href="#" data-target="content-schedule-phase1" class="nav-link"><i class="material-icons nav-item-icon">edit_note</i><span>フェーズ1</span></a></li>
+                            <li><a href="#" data-target="content-schedule-phase2" class="nav-link"><i class="material-icons nav-item-icon">build_circle</i><span>フェーズ2</span></a></li>
+                            <li><a href="#" data-target="content-schedule-phase3" class="nav-link"><i class="material-icons nav-item-icon">beach_access</i><span>フェーズ3</span></a></li>
+                            <li><a href="#" data-target="content-schedule-phase4" class="nav-link"><i class="material-icons nav-item-icon">construction</i><span>フェーズ4</span></a></li>
+                            <li><a href="#" data-target="content-schedule-phase5" class="nav-link"><i class="material-icons nav-item-icon">event_available</i><span>フェーズ5</span></a></li>
+                            <li><a href="#" data-target="content-schedule-phase6" class="nav-link"><i class="material-icons nav-item-icon">summarize</i><span>フェーズ6</span></a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#" data-target="content-improvements" class="nav-link"><i class="material-icons nav-item-icon">lightbulb</i><span>特に重視すべき改善点</span></a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main id="content-area" class="s12 m8 l9 xl10 padding content-container main-content-area">
+            <article id="welcome-message" class="card large-padding">
+                <h2 class="large-title primary-text">ようこそ！</h2>
+                <p class="medium-text">このページでは、2025年度「開成運動交流祭」の成功に向けた運営計画提案をまとめています。左の目次から各セクションを選択してご覧ください。</p>
+                <p class="medium-text">本提案は、昨年度の反省点を踏まえ、全校生徒が主体的に参加し、安全かつ公平に競技を楽しみ、異学年交流という目的を達成できる体育祭を実現することを目指しています。</p>
+            </article>
+
+            <!-- Introduction Section -->
+            <article id="content-introduction" class="card large-padding content-pane hidden">
+                <h2 class="large-title primary-text content-section-title">提案の前提と目的</h2>
+                <div class="medium-text">
+                    <p><strong>現状認識:</strong> 6月15日現在、競技種目は決定済み、体育的行事プロジェクト（以下、体プロ）メンバーも確定し、体育祭の基本方針である大綱は公開済み。これから、当日の具体的な運営計画、練習計画、審判講習会の計画、そして各競技の詳細なルールや進行を定めた競技要領の作成に着手する段階。</p>
+                    <h4 style="margin-top: 1.5rem;">主要課題（昨年の反省より）:</h4>
+                    <ul>
+                        <li>体プロと生徒会執行部（以下、執行部）間のコミュニケーション不足と、それに伴う役割分担の曖昧さ、業務の偏り。</li>
+                        <li>準備期間の不足、特に生徒の練習時間と審判の育成・質の確保。</li>
+                        <li>一部競技におけるルール理解の浸透不足や判定への不満。</li>
+                        <li>体育祭運営に関わる情報が一部の生徒に集中し、「わかっている人が少ない」状態。</li>
+                        <li>会議運営の非効率性（参加率、時間的制約）。</li>
+                    </ul>
+                    <p><strong>体育祭の主目的:</strong> 異学年交流の促進。</p>
+                    <p><strong>本提案の目的:</strong> 上記課題を克服し、全校生徒960名（24クラス、中1～高3）が主体的に参加し、安全かつ公平に競技を楽しみ、異学年交流という目的を達成できる体育祭を実現するための、具体的な組織体制と段階的な準備・運営計画を提示する。特に、体プロ（34名）と執行部（60名から選抜）のリソースを最大限に活用し、生徒会長の強力なリーダーシップのもとで効率的な運営を目指す。</p>
+                </div>
+            </article>
+
+            <!-- Organization Section Overview (Optional, or combined with first sub-item) -->
+            <article id="content-organization" class="card large-padding content-pane hidden">
+                <h2 class="large-title primary-text content-section-title">1. 組織体制提案：役割と責任の明確化による連携強化</h2>
+                <div class="medium-text">
+                   <p>体育祭の多岐にわたる業務を効率的かつ効果的に推進するため、以下の組織体制を提案します。生徒会長が全体の最高責任者としてリーダーシップを発揮し、各組織・チームが連携して業務を遂行します。</p>
+                   <p>詳細は各サブセクション（1.1～1.4）をご覧ください。</p>
+                </div>
+            </article>
+
+            <!-- 1.1. 体育祭実行委員会 -->
+            <article id="content-org-committee" class="card large-padding content-pane hidden">
+                <h2 class="large-title primary-text content-section-title">1.1. 体育祭実行委員会（最高意思決定機関）</h2>
+                <div class="medium-text">
+                    <h4>目的:</h4>
+                    <p>体育祭全体の企画・運営方針の決定、各組織間の調整、進捗管理、重要課題の解決、最終的な意思決定を行う。体育祭運営の中枢として機能する。</p>
+                    <h4>構成員:</h4>
+                    <ul>
+                        <li>委員長: 生徒会長（予算執行権、人事権、最終決定権を行使）</li>
+                        <li>副委員長（提案）： 体プロ代表リーダー、執行部体育祭担当責任者（各1名、実質的な運営の取りまとめ役）</li>
+                        <li>委員: 体プロ各競技部門代表、執行部各専門チームリーダー、放送局代表、担当教員（宮谷先生、生徒会担当教員4名）</li>
+                    </ul>
+                    <h4>主な役割・権限:</h4>
+                    <ul>
+                        <li>体育祭全体の基本計画、詳細計画の承認。</li>
+                        <li>予算案の承認と執行管理。</li>
+                        <li>各組織・チームからの報告に基づき、進捗状況を把握し、必要な指示を行う。</li>
+                        <li>組織間の意見調整、トラブル発生時の対応方針決定。</li>
+                        <li>体育祭に関わる全ての公式な決定事項の承認。</li>
+                    </ul>
+                    <h4>運営方法:</h4>
+                    <ul>
+                        <li><strong>定例会議:</strong> 原則週1回開催。準備が本格化する期間（学校祭後、夏休み明け等）は週2～3回に増やすことも検討。</li>
+                        <li><strong>議事:</strong> 各組織・チームからの進捗報告、課題提起、今後の計画、懸案事項の討議と決定。</li>
+                        <li><strong>議事録:</strong> 書記担当を任命し、会議内容、決定事項、担当者、期限を明記した議事録を作成。会議後速やかに関係者全員（体プロ・執行部体育祭担当全員）に共有（例：Google Classroom、共有ドライブ等）。</li>
+                        <li><strong>情報伝達:</strong> 実行委員会での決定事項は、各組織・チームのリーダーを通じて速やかに所属メンバーに伝達される体制を構築する。</li>
+                    </ul>
+                </div>
+            </article>
+
+            <!-- 1.2. 体育的行事プロジェクト（体プロ） -->
+            <article id="content-org-taipro" class="card large-padding content-pane hidden">
+                <h2 class="large-title primary-text content-section-title">1.2. 体育的行事プロジェクト（体プロ - 34名）：競技運営の専門家集団</h2>
+                <div class="medium-text">
+                    <h4>目的:</h4>
+                    <p>体育祭の核となる「競技」に関する企画、準備、運営を専門的に担当し、魅力的で公平かつ安全な競技環境を提供する。</p>
+                    <h4>内部チーム編成と業務内容:</h4>
+                    <ul>
+                        <li><strong>体プロ代表リーダー（1～2名）：</strong> 体プロ全体の統括、実行委員会への出席と報告、体プロ内各チーム間の調整、モチベーション維持。</li>
+                        <li><strong>競技運営チーム（競技種目ごとに編成、例：綱引きチーム、リレーチーム、玉入れチーム等）：</strong>
+                            <ul>
+                                <li>競技要領作成: 担当競技の公式ルールブックを作成。内容は、詳細ルール、競技進行手順（招集から結果発表まで）、コート設営図、使用用具一覧、審判の配置と役割、代理出場に関する特記事項、安全上の注意点などを含む。全生徒・教員が理解できるよう、図やイラストも活用。</li>
+                                <li>練習計画・実施サポート: 担当競技の練習計画（練習内容、スケジュール、場所、必要な用具）を立案。HR代表やクラスの体育委員と連携し、練習の呼びかけやサポートを行う。必要に応じて技術指導も担当。</li>
+                                <li>当日の競技運営: 担当競技の進行管理、審判員への指示、タイムキーピング、競技中のアナウンス原稿作成（放送局と連携）、競技エリアの準備・確認、競技後の片付け。</li>
+                            </ul>
+                        </li>
+                        <li><strong>審判育成チーム（体プロ内から選抜、横断的活動）：</strong>
+                            <ul>
+                                <li>審判講習会企画・運営: 講習会のカリキュラム作成（ルール理解、判定基準の統一、実技演習）、教材作成（ビデオ、図解資料等）、講師担当（必要に応じて教員や外部経験者に協力を依頼）、参加者募集・管理、当日の運営。</li>
+                                <li>審判マニュアル作成: 全競技共通の審判の心構え、基本的な合図、トラブル対応例などをまとめたマニュアルと、各競技特有の判定基準を記載したマニュアルを作成。</li>
+                                <li>継続的サポート: 講習会後も、審判員からの質問対応や、練習試合等での実践機会提供。</li>
+                            </ul>
+                        </li>
+                        <li><strong>用具・会場チーム（体プロ内から選抜、横断的活動）：</strong>
+                            <ul>
+                                <li>競技専用用具管理: 各競技運営チームと連携し、必要な専門用具（綱、玉、バトン、ゼッケン、得点板等）のリストアップ、数量確認、現状把握（破損・不足等）。執行部の物品調達チームへ調達依頼。体育祭期間中の用具の保管、貸出、返却管理。</li>
+                                <li>競技エリア設営・撤去サポート: 各競技運営チームと協力し、競技エリアのマーキング、用具配置等の計画と、当日の設営・撤去作業の指示・実施。</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </article>
+
+            <!-- 1.3. 生徒会執行部 -->
+            <article id="content-org-executive" class="card large-padding content-pane hidden">
+                <h2 class="large-title primary-text content-section-title">1.3. 生徒会執行部（体育祭担当チーム - 生徒会長が60名から必要数を任命・配置）：体育祭運営の基盤</h2>
+                <div class="medium-text">
+                    <h4>目的:</h4>
+                    <p>体育祭全体の円滑な運営を支えるためのロジスティクス、管理業務、広報活動、生徒対応、安全管理等を担当し、体プロが競技運営に専念できる環境を整備する。</p>
+                    <h4>専門チーム編成と業務内容:</h4>
+                    <ul>
+                        <li><strong>執行部体育祭担当責任者（1～2名、生徒会長が指名）：</strong> 執行部内体育祭関連業務の統括、実行委員会への出席と報告、執行部内各専門チーム間の調整、生徒会長の補佐。</li>
+                        <li><strong>計画・広報チーム:</strong>
+                            <ul>
+                                <li>全体運営計画: 体育祭全体のタイムテーブル作成（各競技の時間配分、休憩時間、開閉会式等、体プロの競技進行計画と綿密に調整）、プログラムの構成・編集・デザイン・印刷手配・配布。</li>
+                                <li>広報活動: 特設HPの企画・運営・情報更新（競技要領、タイムテーブル、練習日程、応援ルール、代理出場方法、Q&A等を掲載）。校内ポスター、お知らせプリント等の作成・掲示・配布。校内放送原稿作成（体育祭の意義、見どころ、注意事項等、放送局と連携）。</li>
+                                <li>HR代表連携: HR代表者会議の企画・運営、資料作成、体育祭に関する全校生徒への情報伝達の仲介。</li>
+                            </ul>
+                        </li>
+                        <li><strong>会場・設営・物品チーム:</strong>
+                            <ul>
+                                <li>会場全体管理: 会場全体のレイアウト計画（本部席、救護テント、各競技エリアの位置関係、観客席ゾーニング、生徒・来賓動線計画、トイレ・ゴミ箱配置等）。会場設営・撤去の全体計画立案、人員配置（体プロと協力）、当日の指揮。</li>
+                                <li>共通備品管理: 体育祭全体で使用する共通備品（長机、椅子、テント、音響機材（マイク、スピーカー等）、救護用品（医薬品、担架等）、掲示用具、清掃用具等）のリストアップ、必要数確保（学校備品借用、購入、レンタル手配）、当日の配置・管理・回収。</li>
+                            </ul>
+                        </li>
+                        <li><strong>受付・誘導・本部運営チーム:</strong>
+                            <ul>
+                                <li>受付業務: 選手受付（クラス単位での出欠確認）、代理出場受付（専用用紙の受領、確認、名簿への反映、関係各所への連絡）、来賓受付（該当する場合）、一般観覧者受付（該当する場合）のフロー確立、マニュアル作成、人員配置、当日の運営。</li>
+                                <li>誘導・案内: 会場内の案内表示（競技場所、本部、救護、トイレ等）の作成・設置。選手・観客の動線確保と誘導。</li>
+                                <li>本部運営: 総合案内所としての機能、遺失物・拾得物対応、緊急連絡の受付・中継、実行委員会の拠点。</li>
+                            </ul>
+                        </li>
+                        <li><strong>安全・救護チーム:</strong>
+                            <ul>
+                                <li>救護体制確立: 養護教諭、担当教員と連携し、救護計画（救護所の場所、必要な医薬品・備品、対応フロー、緊急搬送体制等）を策定。当日の救護所運営、応急処置、体調不良者対応。</li>
+                                <li>安全管理: 会場全体の安全点検（設営時、競技中、撤去時）。危険箇所の特定と対策。熱中症対策（水分補給の呼びかけ、休憩所の確保等）。生徒の安全な行動を促すための注意喚起。</li>
+                            </ul>
+                        </li>
+                        <li><strong>応援・レクリエーションチーム（新設により、昨年のアンケート結果を反映）:</strong>
+                            <ul>
+                                <li>応援企画・管理: 全校生徒が一体となって楽しめる応援の企画（応援歌コンテスト、応援合戦など、異学年交流の目的に沿ったもの）。応援ルールの策定（声出しの可否、使用可能な応援グッズ、応援エリア等）と周知。</li>
+                                <li>レクリエーション企画・運営: 昼休みや競技の合間などに実施できる簡単なレクリエーション（例：クイズ大会、ミニゲーム等）の企画・準備・運営。体育祭全体の雰囲気を盛り上げる役割。</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </article>
+
+            <!-- 1.4. 放送局 -->
+            <article id="content-org-broadcast" class="card large-padding content-pane hidden">
+                <h2 class="large-title primary-text content-section-title">1.4. 放送局（実行委員会と密接に連携）</h2>
+                <div class="medium-text">
+                    <h4>目的:</h4>
+                    <p>体育祭全体の情報伝達を円滑に行い、アナウンスや音楽を通じて会場の雰囲気を盛り上げる。</p>
+                    <h4>主な業務:</h4>
+                    <ul>
+                        <li>アナウンス: 開会式・閉会式の司会進行。各競技の選手紹介、ルール説明（競技要領に基づき体プロと連携）、競技実況（可能であれば）、結果発表、各種連絡事項のアナウンス。</li>
+                        <li>音響・BGM: 競技中や休憩時間に流すBGMの選定・準備・放送。マイク、スピーカー等の音響機材の操作・管理（執行部会場・物品チームと連携）。</li>
+                        <li>原稿作成: アナウンス原稿、放送スケジュール等の作成（体プロ、執行部計画・広報チームと連携）。</li>
+                        <li>連携: 実行委員会に代表者を派遣し、企画段階から情報共有。特にプログラム進行、選手呼び出し、緊急連絡などで密に連携。</li>
+                    </ul>
+                </div>
+            </article>
+
+            <!-- Schedule Section Overview -->
+            <article id="content-schedule" class="card large-padding content-pane hidden">
+                <h2 class="large-title primary-text content-section-title">2. 推進スケジュール案：段階的準備と情報共有の徹底（6月15日～9月19日）</h2>
+                <div class="medium-text">
+                   <p>学校祭準備期間（～7月12日）、夏休み期間（7月26日～8月17日）を考慮し、各フェーズで達成すべき目標と具体的なアクションアイテムを以下に示します。</p>
+                   <p>詳細は各フェーズ（フェーズ1～6）をご覧ください。</p>
+                </div>
+            </article>
+
+            <!-- Schedule Phase 1 -->
+            <article id="content-schedule-phase1" class="card large-padding content-pane hidden">
+                <h2 class="large-title primary-text content-section-title">フェーズ1：詳細計画策定・基盤構築期間（6月15日 ～ 7月12日 学校祭終了まで）</h2>
+                <div class="medium-text">
+                    <p><strong>全体目標:</strong> 体育祭運営の骨子となる各種計画書の初稿を完成させ、夏休み明けの本格的な準備にスムーズに移行できる状態にする。学校祭準備との両立を図るため、体育祭関連業務は計画策定と資料作成に重点を置く。</p>
+                    <h4>実行委員会アクション:</h4>
+                    <ul>
+                        <li>キックオフミーティング（～6月下旬）： 本提案に基づく組織体制の承認、各チームリーダーの正式任命、体育祭の最終目標・スローガンの確認、全体スケジュールの共有と承認、各チームへの初期タスク指示。</li>
+                        <li>定例会議（週1回）： 各チームからの進捗報告、課題の早期発見と共有、意思決定（特に予算配分、重要なルール変更など）。議事録は会議後24時間以内に関係者全員に共有。</li>
+                    </ul>
+                    <h4>体プロアクション:</h4>
+                    <ul>
+                        <li><strong>競技運営チーム:</strong> 担当競技の「競技要領（ドラフト版）」作成開始。内容は、詳細ルール、暫定的な進行手順、必要専門用具リスト、コートレイアウト案、審判配置案を含む。並行して、効果的な練習方法や練習スケジュールの素案検討。</li>
+                        <li><strong>審判育成チーム:</strong> 審判講習会の基本方針（対象者、大まかな内容、実施時期、回数、形式（座学/実技））の検討と計画案作成。審判マニュアル（共通編・競技別編）の構成案作成。</li>
+                        <li><strong>用具・会場チーム（体プロ）：</strong> 各競技運営チームと連携し、競技専用用具の必要数、現状（保管状況、破損有無）をリスト化。新規購入・修理が必要なものを洗い出し、執行部へ報告。</li>
+                    </ul>
+                    <h4>執行部アクション:</h4>
+                    <ul>
+                        <li><strong>計画・広報チーム:</strong> 全体タイムテーブルの素案作成（体プロからの競技所要時間見込みを基に、開閉会式、休憩、準備時間等を考慮）。プログラムの掲載内容リスト作成、デザインコンセプト検討。HPに掲載すべき情報カテゴリの洗い出し。</li>
+                        <li><strong>会場・設営・物品チーム:</strong> 会場全体のレイアウト案（本部、救護、受付、各競技エリア、観客席、応援席、動線、ゴミ箱、トイレ等の配置）のドラフト作成。共通備品（テント、長机、椅子、音響機材、救護用品、掲示板、メガホン等）の必要数調査とリスト作成。</li>
+                        <li><strong>受付・誘導・本部運営チーム:</strong> 代理出場制度の具体的な受付フロー検討（昨年のマニュアルを参考に改善点洗い出し）。選手招集・待機場所から競技エリアへの誘導方法の素案作成。本部運営に必要な機能・物品の検討。</li>
+                        <li><strong>安全・救護チーム:</strong> 過去の体育祭での負傷事例等を参考に、潜在的リスクの洗い出し。救護計画（救護所の場所、必要な医薬品・備品の種類と量、緊急連絡体制、熱中症対策等）の素案作成。養護教諭との初期相談。</li>
+                        <li><strong>応援・レクリエーションチーム:</strong> 応援に関するルール案（応援可能な場所、時間、使用可能な道具、禁止事項等）の検討。レクリエーション企画のアイデア出しと実現可能性の検討。</li>
+                    </ul>
+                    <h4>全チーム共通:</h4>
+                    <p>作成した計画書・資料案は、実行委員会を通じて関係チーム間で共有し、フィードバックを得る。</p>
+                </div>
+            </article>
+
+            <!-- Schedule Phase 2 -->
+            <article id="content-schedule-phase2" class="card large-padding content-pane hidden">
+                <h2 class="large-title primary-text content-section-title">フェーズ2：準備本格化・夏休み準備期間（7月13日 ～ 7月25日 夏休み突入前）</h2>
+                <div class="medium-text">
+                    <p><strong>全体目標:</strong> 夏休み中の自主的・分散的な準備活動を円滑に進めるため、必要なマニュアル類を完成させ、物品手配を開始し、周知活動の準備を整える。</p>
+                    <h4>実行委員会アクション:</h4>
+                    <ul>
+                        <li>会議頻度を上げることも検討（例：週2回）。夏休み中の各チームの活動計画、連絡体制、集合活動の日程調整と承認。</li>
+                        <li>各チームから提出された計画書・マニュアル初稿のレビューと承認。</li>
+                    </ul>
+                    <h4>体プロアクション:</h4>
+                    <ul>
+                        <li><strong>競技運営チーム:</strong> 「競技要領（決定版）」完成。これに基づき、HR代表や全校生徒に配布するための簡略版（ポイントをまとめたもの）も作成検討。練習計画を確定し、HP等で周知開始。</li>
+                        <li><strong>審判育成チーム:</strong> 審判講習会プログラム、教材（ルールブック、判定基準集、ビデオ教材等）完成。審判員募集開始（HP、掲示等）。第1回審判希望者向け説明会（オンラインも活用）開催。</li>
+                        <li><strong>用具・会場チーム（体プロ）：</strong> 執行部と連携し、競技専用用具の調達・修理手配。</li>
+                    </ul>
+                    <h4>執行部アクション:</h4>
+                    <ul>
+                        <li><strong>計画・広報チーム:</strong> プログラム最終稿完成、印刷業者へ入稿（または校内印刷準備）。HPへの情報掲載本格化（競技ルール概要、タイムテーブル、応援ルール、代理出場方法等）。校内掲示用ポスター完成・掲示開始。</li>
+                        <li><strong>会場・設営・物品チーム:</strong> 会場レイアウト図完成。共通備品の発注・購入・レンタル手配開始。設営・撤去の具体的な手順書、人員配置計画（シフト案）作成。</li>
+                        <li><strong>受付・誘導・本部運営チーム:</strong> 各種受付マニュアル（代理出場受付、選手出欠確認等）完成。選手招集・誘導マニュアル完成。案内表示デザイン作成。</li>
+                        <li><strong>安全・救護チーム:</strong> 救護計画書完成（養護教諭・担当教員の確認を得る）。必要な医薬品・備品のリストを会場・物品チームへ提出。</li>
+                        <li><strong>応援・レクリエーションチーム:</strong> 応援ルール決定版をHP等で周知。レクリエーションの詳細企画・準備開始。</li>
+                    </ul>
+                    <h4>HR代表者会議開催（執行部計画・広報チーム主催）：</h4>
+                    <p>体育祭の概要、主要なルール（競技、応援、代理出場）、今後のスケジュール、クラスへの連絡依頼事項などを説明。パンフレット（プログラム）の見方や、代理出場用紙の記入方法なども実物を見せながら説明（昨年の反省より）。</p>
+                </div>
+            </article>
+
+            <!-- Schedule Phase 3 -->
+            <article id="content-schedule-phase3" class="card large-padding content-pane hidden">
+                <h2 class="large-title primary-text content-section-title">フェーズ3：夏休み期間（7月26日 ～ 8月17日）：自主的準備と限定的集合活動</h2>
+                <div class="medium-text">
+                    <p><strong>全体目標:</strong> 「夏休み中の活動はできるだけ少なくしたい」という方針を踏まえ、個人または少人数で進められる作業（資料熟読、オンラインでの打ち合わせ、個人練習等）を主とし、集合活動は必要最小限かつ効率的に実施する。</p>
+                    <h4>実行委員会アクション:</h4>
+                    <ul>
+                        <li>週1回程度のオンライン会議で各チームの進捗状況を確認し、課題があれば早期に対応。夏休み明けの活動計画を再確認。</li>
+                    </ul>
+                    <h4>体プロアクション:</h4>
+                    <ul>
+                        <li><strong>競技運営チーム:</strong> 競技要領・審判マニュアルの再読・理解深化。担当競技の運営シミュレーション（頭の中で、または少人数で）。必要に応じてオンラインでチームミーティング。</li>
+                        <li><strong>審判育成チーム:</strong> 審判講習会（リーダー層や希望者対象の先行講習、または基礎的な座学パートのオンライン実施など）。審判マニュアルの読み込み。</li>
+                        <li><strong>用具・会場チーム（体プロ）：</strong> 夏休み中にしかできない用具の作成や大規模な修理などがあれば、計画的に実施（例：数日間の集中作業日設定）。</li>
+                    </ul>
+                    <h4>執行部アクション:</h4>
+                    <ul>
+                        <li><strong>計画・広報チーム:</strong> プログラムの校正作業（オンライン校正ツールの活用等）。HPコンテンツの充実（Q&Aコーナー設置等）。</li>
+                        <li><strong>会場・設営・物品チーム:</strong> 夏休み中に納品される物品の受け取り、検品、保管場所への移動。案内表示、看板等の作成作業。</li>
+                        <li><strong>受付・誘導・本部運営チーム:</strong> 各種受付名簿の準備（クラス名簿との照合等）。</li>
+                        <li><strong>安全・救護チーム:</strong> 救護スタッフ（ボランティア等）の募集・確保（必要な場合）。</li>
+                        <li><strong>応援・レクリエーションチーム:</strong> レクリエーションで使用する物品の作成・準備。応援歌等の練習用音源の共有（HP等）。</li>
+                    </ul>
+                    <h4>集合活動の例（夏休み中、1～3日程度、半日単位なども活用）：</h4>
+                    <ul>
+                        <li>体プロ・執行部合同リーダー会議（夏休み明けの活動方針確認、課題共有）。</li>
+                        <li>審判講習会（実技中心、または全体説明会）。</li>
+                        <li>会場設営に関わる事前準備（ラインテープのサンプル貼り、大型備品の配置場所確認など）。</li>
+                        <li>応援リーダー練習会。</li>
+                    </ul>
+                    <p><strong>重要:</strong> 夏休み中の活動は全て事前に計画し、参加者への連絡を徹底。無理のない範囲で、かつ目的を明確にして実施する。</p>
+                </div>
+            </article>
+
+            <!-- Schedule Phase 4 -->
+            <article id="content-schedule-phase4" class="card large-padding content-pane hidden">
+                <h2 class="large-title primary-text content-section-title">フェーズ4：最終準備・総仕上げ期間（8月18日 ～ 9月18日 本番前日）</h2>
+                <div class="medium-text">
+                    <p><strong>全体目標:</strong> 全ての準備を完了させ、本番に向けて万全の体制を整える。練習、リハーサルを通じて運営の習熟度を高める。</p>
+                    <h4>実行委員会アクション:</h4>
+                    <ul>
+                        <li>会議頻度を上げ（週2～3回）、各チームの最終準備状況の確認、リスク要因の洗い出しと対策、当日の指揮命令系統の再確認。</li>
+                        <li>当日の天候不良時の対応プラン（雨天プログラム、延期判断基準等）の最終確認。</li>
+                    </ul>
+                    <h4>体プロアクション:</h4>
+                    <ul>
+                        <li><strong>競技運営チーム:</strong> 各競技の練習を本格的に実施（昼休み、放課後等を活用）。競技運営リハーサル（実際の用具、会場の一部を使用し、審判員も参加して動きを確認）。競技要領の最終版を全校生徒に周知（HP、HR経由）。</li>
+                        <li><strong>審判育成チーム:</strong> 全審判員対象の審判講習会を複数回実施（座学と実技を組み合わせ、ロールプレイング形式での判定練習も導入）。当日の審判配置表最終確定。</li>
+                        <li><strong>用具・会場チーム（体プロ）：</strong> 競技専用用具の最終点検、数量確認、各競技エリアへの配置計画。</li>
+                    </ul>
+                    <h4>執行部アクション:</h4>
+                    <ul>
+                        <li><strong>計画・広報チーム:</strong> プログラムの全校配布完了。当日の放送スケジュール、アナウンス原稿最終版を放送局と共有。HPでの直前情報（天候判断、持ち物最終確認等）発信。</li>
+                        <li><strong>会場・設営・物品チーム:</strong> 会場設営に必要な資材・備品の最終確認と搬入。設営・撤去の最終手順確認と人員への周知。</li>
+                        <li><strong>受付・誘導・本部運営チーム:</strong> 受付・誘導スタッフへの最終説明会、ロールプレイング。本部設営準備。</li>
+                        <li><strong>安全・救護チーム:</strong> 救護スタッフとの最終打ち合わせ。救護用品の最終チェック。</li>
+                        <li><strong>応援・レクリエーションチーム:</strong> 応援グッズの最終確認。レクリエーションの最終リハーサル。</li>
+                    </ul>
+                    <h4>HR代表者最終説明会（実行委員会主催）：</h4>
+                    <p>当日の集合時間・場所、注意事項、代理出場に関する最終確認、クラスへの連絡依頼。</p>
+                    <h4>9月18日（体育祭前日）：</h4>
+                    <ul>
+                        <li>全体リハーサル: 開会式、閉会式の流れ、主要競技の入退場、選手招集の動きなどを実際に確認。</li>
+                        <li>会場設営: 全員で協力し、計画に基づき会場設営を行う。</li>
+                        <li>最終確認: 各チームで当日の役割、持ち物、集合時間などを最終確認。</li>
+                    </ul>
+                </div>
+            </article>
+
+            <!-- Schedule Phase 5 -->
+            <article id="content-schedule-phase5" class="card large-padding content-pane hidden">
+                <h2 class="large-title primary-text content-section-title">フェーズ5：体育祭当日（9月19日）</h2>
+                <div class="medium-text">
+                    <h4>早朝:</h4>
+                    <p>実行委員会、体プロ、執行部体育祭担当、放送局メンバーは指定時間に集合。最終打ち合わせ、会場・用具の最終点検。</p>
+                    <h4>運営中:</h4>
+                    <ul>
+                        <li>実行委員会は本部を拠点に、トランシーバー等を活用して全体の状況を把握し、必要な指示を行う。</li>
+                        <li>各チームは事前に定められた役割とマニュアルに基づき、責任を持って業務を遂行する。</li>
+                        <li>体プロは競技進行と審判業務に集中。</li>
+                        <li>執行部は受付、誘導、会場管理、安全管理、救護、本部運営等を担当。</li>
+                        <li>放送局はアナウンス、BGMで会場を盛り上げ、情報伝達をサポート。</li>
+                        <li>トラブル発生時は、まず各チームリーダーが対応。解決困難な場合は速やかに実行委員会に報告し、指示を仰ぐ。昨年の「トラブルシューティング」資料を参考に、想定される事態への対応フローを再確認しておく。</li>
+                    </ul>
+                    <h4>競技終了後:</h4>
+                    <p>プログラムに従い、閉会式、表彰式を円滑に実施。</p>
+                </div>
+            </article>
+
+            <!-- Schedule Phase 6 -->
+            <article id="content-schedule-phase6" class="card large-padding content-pane hidden">
+                <h2 class="large-title primary-text content-section-title">フェーズ6：撤収・反省・引継ぎ期間（9月20日～9月末頃）</h2>
+                <div class="medium-text">
+                    <h4>9月20日（または当日放課後）：</h4>
+                    <p>全員で協力し、迅速かつ安全に会場の撤収作業、清掃、物品の返却・整理を行う。</p>
+                    <h4>～9月末:</h4>
+                    <ul>
+                        <li><strong>会計報告:</strong> 執行部計画・広報チーム（または会計担当）が予算の執行状況をまとめ、生徒会長・担当教員に報告。</li>
+                        <li><strong>反省アンケートの実施・集計:</strong> 全校生徒、教員、運営スタッフ（体プロ、執行部）を対象にアンケートを実施し、結果を集計・分析（昨年のアンケート項目も参考に）。</li>
+                        <li><strong>各チーム・組織ごとの反省会:</strong> 良かった点、課題点、改善提案などをまとめる。</li>
+                        <li><strong>実行委員会による総括会議:</strong> 各反省点を集約し、体育祭全体の成果と課題を総括。次年度に向けた提言をまとめる。</li>
+                        <li><strong>報告書作成:</strong> 体育祭の企画から実施、反省までを記録した公式報告書を作成。競技結果、会計報告、アンケート結果、反省点、次年度への提言などを盛り込む。</li>
+                        <li><strong>引継ぎ資料作成:</strong> 次年度の担当者がスムーズに業務を開始できるよう、各種マニュアル、計画書、連絡先リスト、反省点などを整理し、引継ぎ資料としてまとめる。</li>
+                    </ul>
+                </div>
+            </article>
+
+            <!-- Improvements Section -->
+            <article id="content-improvements" class="card large-padding content-pane hidden">
+                <h2 class="large-title primary-text content-section-title">特に重視すべき改善点（昨年の振り返りを踏まえて）</h2>
+                <div class="medium-text">
+                    <h4>コミュニケーションの活性化と透明性の確保:</h4>
+                    <ul>
+                        <li>実行委員会を核としたオープンな議論の場を設け、決定事項や進捗は議事録等で速やかに全関係者に共有する。</li>
+                        <li>体プロと執行部の各担当者レベルでも、日常的な情報交換や相談がしやすい雰囲気を作る（例：合同作業の機会を設ける、共通の連絡ツールを活用する）。</li>
+                    </ul>
+                    <h4>練習時間の計画的確保と質の向上:</h4>
+                    <ul>
+                        <li>夏休み明けから本番までの期間に、各競技の特性に応じた練習時間を計画的に設定する。昼休み、放課後だけでなく、必要であれば土曜日なども検討（学校と要相談）。</li>
+                        <li>体プロが中心となり、効果的な練習メニューを考案し、技術指導だけでなく、ルール理解やチームワーク醸成も意識した練習を行う。</li>
+                    </ul>
+                    <h4>審判講習会の抜本的改革:</h4>
+                    <ul>
+                        <li>昨年のアンケート結果を重く受け止め、審判講習会の内容・方法を大幅に見直す。</li>
+                        <li>座学（ルール、判定基準の明確な説明、ビデオ教材活用）と実技（模擬試合での判定練習、ケーススタディ）のバランスを重視。</li>
+                        <li>審判員同士で判定基準を統一するためのディスカッションの時間を設ける。</li>
+                        <li>必要であれば、競技経験のある上級生や教員、外部指導者（OB/OGなど）に協力を依頼し、質の高い指導を提供する。</li>
+                        <li>講習会を複数回実施し、反復練習とフィードバックの機会を確保する。</li>
+                    </ul>
+                    <h4>競技要領の分かりやすさと周知徹底:</h4>
+                    <ul>
+                        <li>図やイラストを多用し、誰にでも理解しやすい競技要領を作成する。</li>
+                        <li>HPへの掲載、HR代表を通じたクラスへの説明、練習時の再確認など、様々な方法で周知を徹底する。</li>
+                    </ul>
+                    <h4>「わかっている人」を増やすための取り組み:</h4>
+                    <ul>
+                        <li>各チーム・部門内で、業務内容や進捗状況を常に共有し、メンバー全員が主体的に関われるようにする。</li>
+                        <li>マニュアル類を整備し、誰でも業務内容を理解できるようにする。</li>
+                        <li>リーダー層だけでなく、一般の運営スタッフにも積極的に情報を提供し、質問しやすい環境を作る。</li>
+                    </ul>
+                    <h4>会議運営の効率化:</h4>
+                    <ul>
+                        <li>会議の目的、アジェンダ、必要時間を事前に明確にし、参加者に周知する。</li>
+                        <li>時間厳守を徹底し、だらだらとした会議にならないよう、生徒会長や各リーダーが進行を管理する。</li>
+                        <li>決定事項と次のアクションを明確にして会議を終了する。</li>
+                    </ul>
+                    <hr style="margin: 2rem 0;">
+                    <p>この詳細な計画が、2024年度「開成運動交流祭」の成功に向けた道筋を具体的に示すものとなれば幸いです。生徒会長様のリーダーシップのもと、体プロ、執行部、そして全校生徒が一丸となって、素晴らしい体育祭を創り上げていくことを心より応援しております。</p>
+                </div>
+            </article>
+
+        </main>
+    </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const navigationUl = document.getElementById('sidebar-navigation').querySelector('ul');
+    const contentArea = document.getElementById('content-area');
+    const welcomeMessage = document.getElementById('welcome-message');
+    const contentPanes = contentArea.querySelectorAll('.content-pane');
+    const navLinks = navigationUl.querySelectorAll('.nav-link');
+
+    // Function to activate a section
+    function activateSection(targetId) {
+        // Hide welcome message
+        welcomeMessage.classList.add('hidden');
+
+        // Hide all content panes
+        contentPanes.forEach(pane => {
+            pane.classList.add('hidden');
+        });
+
+        // Show the target content pane
+        const targetPane = document.getElementById(targetId);
+        if (targetPane) {
+            targetPane.classList.remove('hidden');
+            // Scroll to top of content area or target pane
+            contentArea.scrollTop = 0; // Or targetPane.scrollIntoView();
+        }
+
+        // Update active state in navigation
+        navLinks.forEach(link => {
+            const listItem = link.closest('li');
+            if (link.dataset.target === targetId) {
+                listItem.classList.add('active-item');
+            } else {
+                listItem.classList.remove('active-item');
+            }
+        });
+    }
+    
+    // Initial active state for the first item (optional, or based on URL hash)
+    // For now, let's keep welcome message visible initially.
+    // If you want to default to the first real content:
+    // const firstNavLink = navigationUl.querySelector('.nav-link[data-target]');
+    // if (firstNavLink) {
+    //    activateSection(firstNavLink.dataset.target);
+    // }
+
+
+    navigationUl.addEventListener('click', (e) => {
+        const targetLink = e.target.closest('.nav-link');
+        if (targetLink && targetLink.dataset.target) {
+            e.preventDefault();
+            const targetId = targetLink.dataset.target;
+            activateSection(targetId);
+        }
+    });
+});
+</script>
+</body>
+</html>
