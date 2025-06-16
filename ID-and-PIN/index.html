@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ID・PIN生成アプリ</title>
+    <!-- Beer CSS -->
+    <link rel="stylesheet" href="../beer.css">
+    <script type="module" src="https://cdn.jsdelivr.net/npm/beercss@3.5.1/dist/beercss.min.js"></script>
+    <!-- Material Design Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: var(--font, 'Inter', 'Noto Sans JP', sans-serif);
+        }
+        .main-content-area {
+            padding-top: 1rem;
+        }
+        .content-card {
+            margin-bottom: 1.5rem;
+            background-color: var(--surface-container);
+        }
+        .content-section-title {
+            border-bottom: 2px solid var(--outline-variant);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+            margin-top:0;
+            color: var(--primary);
+        }
+        /* Default field margin */
+        .field {
+            margin-bottom: 1.5rem; /* Increased default bottom margin for fields */
+        }
+
+        /* Styling for the character options group */
+        .char-options-label { /* New class for the "使用文字:" label itself if needed, or style existing one */
+            font-weight: bold;
+            display: block;
+            margin-bottom: 0.75rem; /* Space below "使用文字:" label */
+        }
+
+        .char-options-group {
+            display: flex;
+            flex-wrap: wrap;       /* Allow wrapping on small screens */
+            align-items: center;   /* Vertically align items to the center */
+            gap: 1.5rem;           /* Space between items in the group (checkbox, select) */
+            /* margin-top is handled by char-options-label's margin-bottom */
+        }
+
+        /* Adjustments for items within char-options-group */
+        .char-options-group > label.checkbox {
+            margin-bottom: 0; /* Remove default bottom margin from checkbox if any, rely on gap */
+        }
+
+        .char-options-group > .field.select {
+            min-width: 180px; /* Ensure select has enough width */
+            margin-bottom: 0; /* Remove default bottom margin, rely on gap */
+            flex-grow: 0;     /* Prevent select from growing too much */
+        }
+
+
+        #resultTable th, #resultTable td {
+            padding: 0.75rem;
+            text-align: left;
+        }
+        #errorMessage.chip {
+            margin-bottom: 1rem;
+            padding: 0.75rem 1rem;
+        }
+        .hidden {
+            display: none !important;
+        }
+        #resultArea > button {
+            margin-right: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        /* Make sure action card buttons are spaced nicely if needed */
+        #actions-card {
+            padding-top: 0; /* Remove padding if it makes too much space above button */
+        }
+    </style>
+</head>
+<body data-theme="light">
+
+    <header>
+        <nav class="primary">
+            <h1 class="large-title">ID・PIN生成アプリ</h1>
+            <p class="opacity-75">生徒番号から一意のIDとPINを生成します。</p>
+        </nav>
+    </header>
+
+    <div class="grid large-padding">
+        <main class="s12 main-content-area">
+
+            <article id="error-card" class="content-card large-padding hidden">
+                 <div id="errorMessage" class="chip red white-text"></div>
+            </article>
+
+            <article id="input-card" class="content-card large-padding">
+                <h2 class="large-title content-section-title">入力情報</h2>
+                <div class="field textarea label border">
+                    <textarea id="studentNumbers" placeholder="例:
+1001
+1002
+1003"></textarea>
+                    <label>生徒番号 (改行区切り)</label>
+                    <span></span><i></i>
+                </div>
+            </article>
+
+            <article id="id-settings-card" class="content-card large-padding">
+                <h3 class="medium-title primary-text" style="margin-top:0; margin-bottom: 1rem;">ID生成条件</h3>
+                <div class="field numeric label border"> <!-- Default field margin-bottom: 1.5rem applies -->
+                    <input type="number" id="idLength" value="8" min="1">
+                    <label>桁数</label>
+                    <span></span><i></i>
+                </div>
+
+                <div> <!-- Wrapper for "使用文字" label and options, removed 'field' class from this div -->
+                    <label class="char-options-label">使用文字:</label>
+                    <div class="char-options-group">
+                        <label class="checkbox">
+                            <input type="checkbox" id="idUseDigits" checked>
+                            <span>数字</span>
+                        </label>
+                        <div class="field select label border"> <!-- field class kept for select styling -->
+                            <select id="idAlphabetOption">
+                                <option value="none">使用しない</option>
+                                <option value="upper" selected>大文字のみ</option>
+                                <option value="lower">小文字のみ</option>
+                                <option value="both">両方</option>
+                            </select>
+                            <label>アルファベット</label>
+                            <span></span><i></i>
+                        </div>
+                        <label class="checkbox">
+                            <input type="checkbox" id="idUseSymbols">
+                            <span>記号</span>
+                        </label>
+                    </div>
+                </div>
+            </article>
+
+            <article id="pin-settings-card" class="content-card large-padding">
+                <h3 class="medium-title primary-text" style="margin-top:0; margin-bottom: 1rem;">PIN生成条件</h3>
+                 <div class="field numeric label border"> <!-- Default field margin-bottom: 1.5rem applies -->
+                    <input type="number" id="pinLength" value="4" min="1">
+                    <label>桁数</label>
+                    <span></span><i></i>
+                </div>
+
+                <div> <!-- Wrapper for "使用文字" label and options -->
+                    <label class="char-options-label">使用文字:</label>
+                     <div class="char-options-group">
+                        <label class="checkbox">
+                            <input type="checkbox" id="pinUseDigits" checked>
+                            <span>数字</span>
+                        </label>
+                        <div class="field select label border">
+                            <select id="pinAlphabetOption">
+                                <option value="none">使用しない</option>
+                                <option value="upper">大文字のみ</option>
+                                <option value="lower">小文字のみ</option>
+                                <option value="both" selected>両方</option>
+                            </select>
+                            <label>アルファベット</label>
+                            <span></span><i></i>
+                        </div>
+                        <label class="checkbox">
+                            <input type="checkbox" id="pinUseSymbols">
+                            <span>記号</span>
+                        </label>
+                    </div>
+                </div>
+            </article>
+
+            <article id="actions-card" class="content-card large-padding" style="background-color: transparent; box-shadow: none;">
+                <button id="generateButton" class="responsive primary">
+                    <span>実行</span>
+                    <i class="material-icons">play_arrow</i>
+                </button>
+            </article>
+
+            <article id="resultArea" class="content-card large-padding hidden">
+                <h2 class="large-title content-section-title">生成結果</h2>
+                <button id="toggleResultButton" class="secondary">
+                    <span>結果を隠す</span>
+                    <i class="material-icons">visibility_off</i>
+                </button>
+                <button id="downloadCsvButton" class="tertiary">
+                    <span>CSVダウンロード</span>
+                    <i class="material-icons">download</i>
+                </button>
+                <div class="responsive-table">
+                    <table id="resultTable" class="stripes">
+                        <thead>
+                            <tr>
+                                <th>生徒番号</th>
+                                <th>ID</th>
+                                <th>PIN</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- 結果はここに挿入されます -->
+                        </tbody>
+                    </table>
+                </div>
+            </article>
+        </main>
+    </div>
+
+    <script>
+        const studentNumbersInput = document.getElementById('studentNumbers');
+        const idLengthInput = document.getElementById('idLength');
+        const idUseDigitsCheckbox = document.getElementById('idUseDigits');
+        const idAlphabetOptionSelect = document.getElementById('idAlphabetOption');
+        const idUseSymbolsCheckbox = document.getElementById('idUseSymbols');
+
+        const pinLengthInput = document.getElementById('pinLength');
+        const pinUseDigitsCheckbox = document.getElementById('pinUseDigits');
+        const pinAlphabetOptionSelect = document.getElementById('pinAlphabetOption');
+        const pinUseSymbolsCheckbox = document.getElementById('pinUseSymbols');
+
+        const generateButton = document.getElementById('generateButton');
+        const resultArea = document.getElementById('resultArea');
+        const toggleResultButton = document.getElementById('toggleResultButton');
+        const downloadCsvButton = document.getElementById('downloadCsvButton');
+        const resultTableBody = document.querySelector('#resultTable tbody');
+        
+        const errorCard = document.getElementById('error-card');
+        const errorMessageDiv = document.getElementById('errorMessage');
+
+
+        const CHARSETS = {
+            digits: '0123456789',
+            alphabetUpper: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+            alphabetLower: 'abcdefghijklmnopqrstuvwxyz',
+            symbols: '!@#$%^&*()_+-=[]{};\':",./<>?'
+        };
+
+        let generatedData = [];
+
+        function generateRandomString(length, charSet) {
+            let result = '';
+            const charSetLength = charSet.length;
+            if (charSetLength === 0) return '';
+            const randomValues = new Uint32Array(length);
+            crypto.getRandomValues(randomValues);
+            for (let i = 0; i < length; i++) {
+                result += charSet.charAt(randomValues[i] % charSetLength);
+            }
+            return result;
+        }
+
+        function getCharSet(useDigits, alphabetOption, useSymbols) {
+            let charSet = '';
+            if (useDigits) charSet += CHARSETS.digits;
+            if (alphabetOption === 'upper') charSet += CHARSETS.alphabetUpper;
+            else if (alphabetOption === 'lower') charSet += CHARSETS.alphabetLower;
+            else if (alphabetOption === 'both') charSet += CHARSETS.alphabetUpper + CHARSETS.alphabetLower;
+            if (useSymbols) charSet += CHARSETS.symbols;
+            return charSet;
+        }
+        
+        function displayError(message) {
+            errorMessageDiv.textContent = message;
+            if (message) {
+                errorCard.classList.remove('hidden');
+            } else {
+                errorCard.classList.add('hidden');
+            }
+        }
+
+        function validateInputs() {
+            let currentErrorMessages = '';
+            let isValid = true;
+
+            const studentNumbers = studentNumbersInput.value.trim().split('\n').filter(sn => sn.trim() !== '');
+            if (studentNumbers.length === 0) {
+                currentErrorMessages += '生徒番号を入力してください。\n';
+                isValid = false;
+            }
+
+            const idLength = parseInt(idLengthInput.value);
+            const pinLength = parseInt(pinLengthInput.value);
+
+            if (isNaN(idLength) || idLength < 1) {
+                currentErrorMessages += 'IDの桁数は1以上の数値を指定してください。\n';
+                isValid = false;
+            }
+            if (isNaN(pinLength) || pinLength < 1) {
+                currentErrorMessages += 'PINの桁数は1以上の数値を指定してください。\n';
+                isValid = false;
+            }
+
+            const idCharSet = getCharSet(idUseDigitsCheckbox.checked, idAlphabetOptionSelect.value, idUseSymbolsCheckbox.checked);
+            if (idCharSet.length === 0 && (isValid && studentNumbers.length > 0) ) {
+                currentErrorMessages += 'ID生成に使用する文字種を少なくとも1つ選択してください。\n';
+                isValid = false;
+            }
+            const pinCharSet = getCharSet(pinUseDigitsCheckbox.checked, pinAlphabetOptionSelect.value, pinUseSymbolsCheckbox.checked);
+            if (pinCharSet.length === 0 && (isValid && studentNumbers.length > 0)) {
+                currentErrorMessages += 'PIN生成に使用する文字種を少なくとも1つ選択してください。\n';
+                isValid = false;
+            }
+            
+            displayError(currentErrorMessages.trim());
+            return isValid;
+        }
+
+
+        generateButton.addEventListener('click', () => {
+            displayError('');
+            
+            if (!validateInputs()) {
+                resultArea.classList.add('hidden');
+                return;
+            }
+
+            const studentNumbersRaw = studentNumbersInput.value.trim();
+            const studentNumbers = studentNumbersRaw.split('\n').map(s => s.trim()).filter(s => s !== '');
+
+            if (studentNumbers.length === 0) {
+                displayError('有効な生徒番号が入力されていません。\n(改行のみ、または空白のみの行は処理されません)');
+                resultArea.classList.add('hidden');
+                return;
+            }
+
+            const idLength = parseInt(idLengthInput.value);
+            const idCharSet = getCharSet(idUseDigitsCheckbox.checked, idAlphabetOptionSelect.value, idUseSymbolsCheckbox.checked);
+
+            const pinLength = parseInt(pinLengthInput.value);
+            const pinCharSet = getCharSet(pinUseDigitsCheckbox.checked, pinAlphabetOptionSelect.value, pinUseSymbolsCheckbox.checked);
+
+            if (idCharSet.length === 0 || pinCharSet.length === 0) {
+                displayError('IDまたはPINの文字種が選択されていません。');
+                resultArea.classList.add('hidden');
+                return;
+            }
+
+            generatedData = [];
+            resultTableBody.innerHTML = ''; 
+            const generatedIds = new Set();
+            let generationError = null;
+
+            try {
+                for (const studentNumber of studentNumbers) {
+                    let id;
+                    let attempts = 0;
+                    const maxAttempts = Math.max(studentNumbers.length * 10, 5000); 
+                    
+                    do {
+                        id = generateRandomString(idLength, idCharSet);
+                        attempts++;
+                        if (attempts > maxAttempts) {
+                            console.warn(`ID生成の試行回数が上限 (${maxAttempts}回) に達しました。生徒番号: ${studentNumber}`);
+                            generationError = `一意のIDを生成できませんでした。IDの桁数を増やすか、文字種を増やしてください。生徒数が多い場合や桁数が少ない場合に発生しやすくなります。 (生徒番号: ${studentNumber} 付近で問題発生の可能性)`;
+                            break; 
+                        }
+                    } while (generatedIds.has(id));
+                    
+                    if (generationError) break;
+
+                    generatedIds.add(id);
+
+                    const pin = generateRandomString(pinLength, pinCharSet);
+                    generatedData.push({ studentNumber, id, pin });
+
+                    const row = resultTableBody.insertRow();
+                    row.insertCell().textContent = studentNumber;
+                    row.insertCell().textContent = id;
+                    row.insertCell().textContent = pin;
+                }
+            } catch (error) {
+                console.error("データ生成中に予期せぬエラー:", error);
+                generationError = `予期せぬエラーが発生しました: ${error.message}`;
+            }
+
+            if (generationError) {
+                displayError(generationError);
+                resultArea.classList.add('hidden');
+                return;
+            }
+
+            if (generatedData.length > 0) {
+                resultArea.classList.remove('hidden');
+                document.getElementById('resultTable').classList.remove('hidden');
+                document.getElementById('downloadCsvButton').classList.remove('hidden');
+                toggleResultButton.querySelector('span').textContent = '結果を隠す';
+                toggleResultButton.querySelector('i').textContent = 'visibility_off';
+            } else if (!generationError) {
+                displayError('データが生成されませんでした。入力内容を確認してください。');
+                resultArea.classList.add('hidden');
+            }
+        });
+
+        toggleResultButton.addEventListener('click', () => {
+            const table = document.getElementById('resultTable');
+            const csvBtn = document.getElementById('downloadCsvButton');
+            const icon = toggleResultButton.querySelector('i');
+            const span = toggleResultButton.querySelector('span');
+
+            if (resultArea.classList.contains('hidden')) {
+                return;
+            }
+
+            if (table.classList.contains('hidden')) { 
+                table.classList.remove('hidden');
+                csvBtn.classList.remove('hidden');
+                span.textContent = '結果を隠す';
+                icon.textContent = 'visibility_off';
+            } else { 
+                table.classList.add('hidden');
+                csvBtn.classList.add('hidden');
+                span.textContent = '結果を表示';
+                icon.textContent = 'visibility';
+            }
+        });
+        
+        downloadCsvButton.addEventListener('click', () => {
+            if (generatedData.length === 0) {
+                alert("ダウンロードするデータがありません。");
+                return;
+            }
+
+            const headers = ["生徒番号", "ID", "PIN"];
+            let csvContent = headers.join(",") + "\n"; 
+
+            generatedData.forEach(item => {
+                const studentNumber = `"${String(item.studentNumber).replace(/"/g, '""')}"`;
+                const id = `"${String(item.id).replace(/"/g, '""')}"`;
+                const pin = `"${String(item.pin).replace(/"/g, '""')}"`;
+                csvContent += [studentNumber, id, pin].join(",") + "\n";
+            });
+            
+            const bom = new Uint8Array([0xEF, 0xBB, 0xBF]);
+            const blob = new Blob([bom, csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.setAttribute("href", url);
+            link.setAttribute("download", "id_pin_list.csv");
+            document.body.appendChild(link); 
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            errorCard.classList.add('hidden');
+            const table = document.getElementById('resultTable');
+            if (table.classList.contains('hidden')) {
+                 toggleResultButton.querySelector('span').textContent = '結果を表示';
+                 toggleResultButton.querySelector('i').textContent = 'visibility';
+            }
+        });
+    </script>
+</body>
+</html>
