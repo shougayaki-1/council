@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>開成祭 電子入場チケット - ログイン</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .login-container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            text-align: center;
+            width: 90%;
+            max-width: 400px;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        p {
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: bold;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .login-button {
+            width: 100%;
+            padding: 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .login-button:hover {
+            background-color: #0056b3;
+        }
+        .note {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            color: #888;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <h1>開成祭 電子入場チケット</h1>
+        <p>UNIQUE ID（年組番号4桁）とPINコードを入力してください。</p>
+
+        <form action="/login" method="post"> <!-- action属性は実際のサーバーエンドポイントに書き換えます -->
+            <div class="input-group">
+                <label for="unique_id">UNIQUE ID</label>
+                <input type="text" id="unique_id" name="unique_id" placeholder="例: 2101" required>
+            </div>
+
+            <div class="input-group">
+                <label for="pin_code">PINコード</label>
+                <input type="password" id="pin_code" name="pin_code" placeholder="4桁の英数字" required>
+            </div>
+
+            <button type="submit" class="login-button">ログイン</button>
+        </form>
+
+        <div class="note">
+            ※ID/PINが不明な場合はクラス担任にお問い合わせください。
+        </div>
+    </div>
+
+</body>
+</html>

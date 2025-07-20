@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>【プロトタイプ】開成祭 電子入場チケット</title>
+    <style>
+        /* 基本スタイル */
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #f0f2f5; margin: 0; }
+        .container { max-width: 800px; margin: 20px auto; padding: 10px 20px 30px; background-color: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .page { display: none; } /* 全てのページを一旦非表示に */
+        .page.active { display: block; } /* activeクラスを持つページのみ表示 */
+
+        /* コンポーネントスタイル */
+        h1 { text-align: center; color: #1c1e21; border-bottom: 2px solid #007bff; padding-bottom: 15px; }
+        h2 { color: #333; }
+        .button { display: block; width: 100%; padding: 12px; font-size: 16px; font-weight: bold; color: white; border: none; border-radius: 6px; cursor: pointer; text-align: center; text-decoration: none; box-sizing: border-box; margin-bottom: 10px; }
+        .button-primary { background-color: #007bff; }
+        .button-primary:hover { background-color: #0056b3; }
+        .button-secondary { background-color: #6c757d; }
+        .button-secondary:hover { background-color: #5a6268; }
+        .button-success { background-color: #28a745; }
+        .button-success:hover { background-color: #218838; }
+        .button-danger { background-color: #dc3545; }
+        .button-danger:hover { background-color: #c82333; }
+        
+        /* フォーム */
+        .input-group { margin-bottom: 15px; }
+        .input-group label { display: block; margin-bottom: 5px; font-weight: bold; color: #555; }
+        .input-group input, .input-group select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+        .error-message { color: red; text-align: center; margin-bottom: 15px; }
+        
+        /* チケット表示 */
+        .ticket-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .ticket-card { border: 1px solid #ddd; border-radius: 8px; padding: 20px; text-align: center; background: #fafafa; }
+        .ticket-card .qr-code { width: 150px; height: 150px; background-color: #e0e0e0; margin: 10px auto; display: grid; place-items: center; font-size: 12px; color: #888; border: 1px dashed #ccc; }
+        .ticket-card p { margin: 5px 0; }
+        .ticket-card .name { font-size: 1.2em; font-weight: bold; }
+        .ticket-card .info { font-size: 0.9em; color: #666; }
+        .ticket-card .share-url { font-size: 0.8em; word-break: break-all; margin-top: 10px; background: #eee; padding: 5px; border-radius: 4px; }
+        
+        /* その他 */
+        .header { display: flex; justify-content: space-between; align-items: center; }
+        .header-info { font-size: 0.9em; }
+        .header .logout-button { background: none; border: none; color: #007bff; cursor: pointer; text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+    <!-- ==================== ログイン画面 ==================== -->
+    <div id="login-page" class="page active">
+        <div class="container">
+            <h1>開成祭 電子入場チケット</h1>
+            <p id="login-error" class="error-message" style="display:none;"></p>
+            <div class="input-group">
+                <label for="unique_id">UNIQUE ID</label>
+                <input type="text" id="unique_id" placeholder="例: 2101">
+            </div>
+            <div class="input-group">
+                <label for="pin_code">PINコード</label>
+                <input type="password" id="pin_code" placeholder="4桁の英数字">
+            </div>
+            <button id="login-button" class="button button-primary">ログイン</button>
+        </div>
+    </div>
+
+    <!-- ==================== ダッシュボード画面 ==================== -->
+    <div id="dashboard-page" class="page">
+        <div class="container">
+            <div class="header">
+                <p class="header-info"><span id="user-info"></span>さん</p>
+                <button id="logout-button" class="logout-button">ログアウト</button>
+            </div>
+            <h1>メインメニュー</h1>
+            <button id="goto-admission-form" class="button button-primary">入場券の情報登録・編集</button>
+            <button id="goto-invitation-form" class="button button-primary">招待券の情報登録・編集</button>
+            <hr style="margin: 20px 0;">
+            <button id="goto-ticket-display" class="button button-success">発行済みチケットを表示</button>
+        </div>
+    </div>
+
+    <!-- ==================== 情報登録フォーム画面 ==================== -->
+    <div id="form-page" class="page">
+        <div class="container">
+             <div class="header">
+                <p class="header-info"><span id="form-user-info"></span>さん</p>
+                <button class="back-to-dashboard button-secondary" style="width: auto; padding: 5px 10px; font-size: 14px;">メニューへ戻る</button>
+            </div>
+            <h1 id="form-title">情報登録フォーム</h1>
+            
+            <div id="visitor-list">
+                <!-- ここに来場者情報フォームが動的に追加される -->
+            </div>
+            
+            <button id="add-visitor-button" class="button button-secondary" style="margin-top: 20px;">＋ 来場者を追加</button>
+            <hr style="margin: 20px 0;">
+            <button id="save-button" class="button button-success">この内容で登録・更新する</button>
+        </div>
+    </div>
+    
+    <!-- 来場者フォームのテンプレート（非表示） -->
+    <template id="visitor-form-template">
+        <div class="ticket-card" style="text-align: left; padding: 20px; margin-bottom: 15px;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <h3 style="margin:0;">来場者情報</h3>
+                <button class="remove-visitor-button button-danger" style="width:auto; padding:5px 10px; font-size:12px;">削除</button>
+            </div>
+            <hr>
+            <div class="input-group">
+                <label>氏名</label>
+                <input type="text" class="visitor-name" required>
+            </div>
+            <div class="input-group">
+                <label>フリガナ</label>
+                <input type="text" class="visitor-furigana" required>
+            </div>
+            <div class="input-group">
+                <label>続柄・ご関係</label>
+                <select class="visitor-relationship" required>
+                    <option value="父">父</option>
+                    <option value="母">母</option>
+                    <option value="兄">兄</option>
+                    <option value="姉">姉</option>
+                    <option value="弟">弟</option>
+                    <option value="妹">妹</option>
+                    <option value="祖父">祖父</option>
+                    <option value="祖母">祖母</option>
+                    <option value="友人">友人</option>
+                    <option value="その他">その他</option>
+                </select>
+            </div>
+        </div>
+    </template>
+
+
+    <!-- ==================== チケット表示画面 ==================== -->
+    <div id="ticket-display-page" class="page">
+        <div class="container">
+            <div class="header">
+                 <p class="header-info"><span id="ticket-user-info"></span>さん</p>
+                <button class="back-to-dashboard button-secondary" style="width: auto; padding: 5px 10px; font-size: 14px;">メニューへ戻る</button>
+            </div>
+            <h1>発行済みチケット一覧</h1>
+            
+            <h2>入場券</h2>
+            <div id="admission-ticket-grid" class="ticket-grid">
+                <p>現在、登録されている入場券はありません。</p>
+            </div>
+
+            <hr style="margin: 30px 0;">
+
+            <h2>招待券</h2>
+            <div id="invitation-ticket-grid" class="ticket-grid">
+                 <p>現在、登録されている招待券はありません。</p>
+            </div>
+        </div>
+    </div>
+
+
+<script>
+// ==================================================================
+//  全システムの動作を司るJavaScript
+// ==================================================================
+document.addEventListener('DOMContentLoaded', () => {
+
+    // --- 1. 仮情報データベース(JSONの代わり)と初期設定 ---
+    const DB_KEY = 'kaiseiFesDB';
+
+    function initializeDatabase() {
+        if (!localStorage.getItem(DB_KEY)) {
+            const dummyData = {
+                '2101': {
+                    pin: 'aB3d',
+                    name: '開成 太郎',
+                    class: '2年1組',
+                    tickets: { admission: [], invitation: [] }
+                },
+                '2205': {
+                    pin: 'eF5g',
+                    name: '佐藤 次郎',
+                    class: '2年2組',
+                    tickets: { admission: [], invitation: [] }
+                }
+            };
+            localStorage.setItem(DB_KEY, JSON.stringify(dummyData));
+        }
+    }
+
+    // --- 2. 変数定義と要素の取得 ---
+    const pages = document.querySelectorAll('.page');
+    const loginPage = document.getElementById('login-page');
+    const dashboardPage = document.getElementById('dashboard-page');
+    const formPage = document.getElementById('form-page');
+    const ticketDisplayPage = document.getElementById('ticket-display-page');
+
+    const loginButton = document.getElementById('login-button');
+    const logoutButton = document.getElementById('logout-button');
+    const backToDashboardButtons = document.querySelectorAll('.back-to-dashboard');
+
+    // --- 3. 画面遷移の管理 ---
+    function navigateTo(pageId) {
+        pages.forEach(page => page.classList.remove('active'));
+        document.getElementById(pageId).classList.add('active');
+    }
+
+    // --- 4. ログイン・ログアウト処理 ---
+    loginButton.addEventListener('click', () => {
+        const id = document.getElementById('unique_id').value;
+        const pin = document.getElementById('pin_code').value;
+        const db = JSON.parse(localStorage.getItem(DB_KEY));
+
+        if (db[id] && db[id].pin === pin) {
+            // ログイン成功
+            sessionStorage.setItem('loggedInUser', id); // セッションストレージにログイン情報を保存
+            showDashboard();
+        } else {
+            // ログイン失敗
+            const errorMsg = document.getElementById('login-error');
+            errorMsg.textContent = 'IDまたはPINコードが正しくありません。';
+            errorMsg.style.display = 'block';
+        }
+    });
+
+    logoutButton.addEventListener('click', () => {
+        sessionStorage.removeItem('loggedInUser');
+        navigateTo('login-page');
+    });
+    
+    backToDashboardButtons.forEach(btn => {
+        btn.addEventListener('click', showDashboard);
+    });
+
+    // --- 5. ダッシュボード画面の表示 ---
+    function showDashboard() {
+        const userId = sessionStorage.getItem('loggedInUser');
+        if (!userId) {
+            navigateTo('login-page');
+            return;
+        }
+        const db = JSON.parse(localStorage.getItem(DB_KEY));
+        const userData = db[userId];
+        document.getElementById('user-info').textContent = `${userData.class} ${userData.name}`;
+        navigateTo('dashboard-page');
+    }
+
+    // --- 6. 情報登録フォームの処理 ---
+    let currentFormType = 'admission'; // 'admission' or 'invitation'
+    
+    document.getElementById('goto-admission-form').addEventListener('click', () => {
+        currentFormType = 'admission';
+        setupForm();
+    });
+    document.getElementById('goto-invitation-form').addEventListener('click', () => {
+        currentFormType = 'invitation';
+        setupForm();
+    });
+
+    function setupForm() {
+        const userId = sessionStorage.getItem('loggedInUser');
+        const db = JSON.parse(localStorage.getItem(DB_KEY));
+        const userData = db[userId];
+        
+        document.getElementById('form-user-info').textContent = `${userData.class} ${userData.name}`;
+        
+        const formTitle = document.getElementById('form-title');
+        const visitorList = document.getElementById('visitor-list');
+        visitorList.innerHTML = '';
+        
+        formTitle.textContent = currentFormType === 'admission' ? '入場券の情報登録' : '招待券の情報登録';
+        
+        const tickets = userData.tickets[currentFormType];
+        if (tickets.length > 0) {
+            tickets.forEach(addVisitorForm);
+        } else {
+            addVisitorForm(); // 最初は1つ表示
+        }
+        
+        navigateTo('form-page');
+    }
+
+    function addVisitorForm(visitorData = {}) {
+        const template = document.getElementById('visitor-form-template');
+        const clone = template.content.cloneNode(true);
+        
+        clone.querySelector('.visitor-name').value = visitorData.name || '';
+        clone.querySelector('.visitor-furigana').value = visitorData.furigana || '';
+        clone.querySelector('.visitor-relationship').value = visitorData.relationship || '父';
+        
+        clone.querySelector('.remove-visitor-button').addEventListener('click', (e) => {
+            e.target.closest('.ticket-card').remove();
+        });
+        
+        document.getElementById('visitor-list').appendChild(clone);
+    }
+
+    document.getElementById('add-visitor-button').addEventListener('click', () => addVisitorForm());
+    
+    document.getElementById('save-button').addEventListener('click', () => {
+        const userId = sessionStorage.getItem('loggedInUser');
+        const db = JSON.parse(localStorage.getItem(DB_KEY));
+        
+        const newTickets = [];
+        const forms = document.querySelectorAll('#visitor-list .ticket-card');
+        forms.forEach(form => {
+            const name = form.querySelector('.visitor-name').value.trim();
+            const furigana = form.querySelector('.visitor-furigana').value.trim();
+            const relationship = form.querySelector('.visitor-relationship').value;
+            
+            if(name && furigana){ // 空のフォームは保存しない
+                 newTickets.push({ name, furigana, relationship });
+            }
+        });
+        
+        db[userId].tickets[currentFormType] = newTickets;
+        localStorage.setItem(DB_KEY, JSON.stringify(db));
+        
+        alert('情報を保存しました。');
+        showTicketDisplay();
+    });
+
+    // --- 7. チケット表示画面の処理 ---
+    document.getElementById('goto-ticket-display').addEventListener('click', showTicketDisplay);
+
+    function showTicketDisplay() {
+        const userId = sessionStorage.getItem('loggedInUser');
+        const db = JSON.parse(localStorage.getItem(DB_KEY));
+        const userData = db[userId];
+        
+        document.getElementById('ticket-user-info').textContent = `${userData.class} ${userData.name}`;
+
+        const admissionGrid = document.getElementById('admission-ticket-grid');
+        const invitationGrid = document.getElementById('invitation-ticket-grid');
+
+        admissionGrid.innerHTML = '';
+        invitationGrid.innerHTML = '';
+        
+        // 入場券の表示
+        if (userData.tickets.admission.length > 0) {
+            userData.tickets.admission.forEach((ticket, index) => {
+                admissionGrid.appendChild(createTicketCard(ticket, 'admission', userId, index));
+            });
+        } else {
+            admissionGrid.innerHTML = '<p>現在、登録されている入場券はありません。</p>';
+        }
+
+        // 招待券の表示
+        if (userData.tickets.invitation.length > 0) {
+            userData.tickets.invitation.forEach((ticket, index) => {
+                invitationGrid.appendChild(createTicketCard(ticket, 'invitation', userId, index));
+            });
+        } else {
+            invitationGrid.innerHTML = '<p>現在、登録されている招待券はありません。</p>';
+        }
+
+        navigateTo('ticket-display-page');
+    }
+    
+    function createTicketCard(ticket, type, userId, index) {
+        const card = document.createElement('div');
+        card.className = 'ticket-card';
+        
+        // QRコードのURLを擬似的に生成
+        const qrUrl = `https://kaiseifes.example.com/ticket?uid=${userId}&type=${type}&idx=${index}`;
+        
+        card.innerHTML = `
+            <div class="qr-code">QRコード(ダミー)</div>
+            <p class="name">${ticket.name} 様</p>
+            <p class="info">${ticket.furigana}</p>
+            <p class="info">ご関係: ${ticket.relationship}</p>
+            <p class="share-url">共有URL:<br>${qrUrl}</p>
+        `;
+        return card;
+    }
+
+    // --- 8. 初期化処理の実行 ---
+    initializeDatabase();
+    
+    // ページ読み込み時にログイン状態をチェック
+    if(sessionStorage.getItem('loggedInUser')){
+        showDashboard();
+    } else {
+        navigateTo('login-page');
+    }
+});
+</script>
+
+</body>
+</html>

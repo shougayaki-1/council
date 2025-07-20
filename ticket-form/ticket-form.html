@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>開成祭 電子入場チケット - 情報入力</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        }
+        h1, h2 {
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+        }
+        .welcome-message {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .instructions {
+            background-color: #eef;
+            border-left: 4px solid #007bff;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .instructions ul {
+            padding-left: 20px;
+            margin: 0;
+        }
+        .form-section {
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .visitor-block {
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            background-color: #fafafa;
+        }
+        .visitor-block h3 {
+            margin-top: 0;
+        }
+        .submit-button {
+            width: 100%;
+            padding: 15px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .submit-button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>開成祭 電子入場チケット情報入力</h1>
+
+        <!-- この部分はサーバー側で動的に生徒の氏名を表示します -->
+        <p class="welcome-message">ようこそ、2年1組 開成 太郎さん</p>
+
+        <div class="instructions">
+            <ul>
+                <li>ご来場されるご家族・ご招待者の人数と情報を入力してください。</li>
+                <li>本情報は開成祭前日（〇月〇日 23:59）まで編集可能です。</li>
+                <li>ご兄弟で在校されている場合、一番上のお子様のIDにまとめてご入力ください。</li>
+            </ul>
+        </div>
+        
+        <form action="/submit-ticket-info" method="post">
+            
+            <div class="form-section">
+                <h2>1. ご来場予定人数</h2>
+                <div class="form-group">
+                    <label for="visitor-count">人数を選択してください（最大10名まで）</label>
+                    <select id="visitor-count" name="visitor_count">
+                        <option value="1">1人</option>
+                        <option value="2">2人</option>
+                        <option value="3">3人</option>
+                        <option value="4">4人</option>
+                        <option value="5">5人</option>
+                        <option value="6">6人</option>
+                        <option value="7">7人</option>
+                        <option value="8">8人</option>
+                        <option value="9">9人</option>
+                        <option value="10">10人</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2>2. ご来場者情報</h2>
+                <p>上記で選択した人数分の入力欄が表示されます。</p>
+                <!-- JavaScriptによってこのdivの中に情報入力欄が動的に生成されます -->
+                <div id="visitor-forms-container"></div>
+            </div>
+
+            <button type="submit" class="submit-button">情報を登録してチケットを発行する</button>
+
+        </form>
+    </div>
+
+    <script>
+        // --- ここからがローカル処理を担うJavaScriptです ---
+        document.addEventListener('DOMContentLoaded', function() {
+            const visitorCountSelect = document.getElementById('visitor-count');
+            const container = document.getElementById('visitor-forms-container');
+
+            // 来場者の続柄・ご関係の選択肢
+            const relationshipOptions = [
+                '父', '母', '兄', '姉', '弟', '妹', '祖父', '祖母', '友人', 'その他'
+            ];
+
+            // 入力欄を生成する関数
+            function createVisitorForms() {
+                // 既存の入力欄をすべてクリア
+                container.innerHTML = '';
+
+                // 選択された人数を取得
+                const count = parseInt(visitorCountSelect.value, 10);
+
+                // 人数分だけ入力欄のブロックを生成
+                for (let i = 1; i <= count; i++) {
+                    const block = document.createElement('div');
+                    block.className = 'visitor-block';
+
+                    // セレクトボックスのHTMLを生成
+                    let optionsHtml = '';
+                    relationshipOptions.forEach(opt => {
+                        optionsHtml += `<option value="${opt}">${opt}</option>`;
+                    });
+
+                    block.innerHTML = `
+                        <h3>【来場者 ${i}】</h3>
+                        <div class="form-group">
+                            <label for="visitor_name_${i}">氏名</label>
+                            <input type="text" id="visitor_name_${i}" name="visitor_name_${i}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="visitor_furigana_${i}">フリガナ</label>
+                            <input type="text" id="visitor_furigana_${i}" name="visitor_furigana_${i}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="visitor_relationship_${i}">続柄・ご関係</label>
+                            <select id="visitor_relationship_${i}" name="visitor_relationship_${i}" required>
+                                ${optionsHtml}
+                            </select>
+                        </div>
+                    `;
+                    container.appendChild(block);
+                }
+            }
+
+            // セレクトボックスの値が変更されたら関数を実行
+            visitorCountSelect.addEventListener('change', createVisitorForms);
+
+            // ページ読み込み時に初期状態の入力欄を生成
+            createVisitorForms();
+        });
+    </script>
+
+</body>
+</html>
