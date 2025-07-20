@@ -43,6 +43,30 @@
         .header { display: flex; justify-content: space-between; align-items: center; }
         .header-info { font-size: 0.9em; }
         .header .logout-button { background: none; border: none; color: #007bff; cursor: pointer; text-decoration: underline; }
+
+        /* ▼▼▼ 追加したスタイル ▼▼▼ */
+        .dummy-info {
+            margin-top: 30px;
+            padding: 15px;
+            border: 1px dashed #ccc;
+            background-color: #f9f9f9;
+            border-radius: 6px;
+            font-size: 14px;
+            color: #555;
+        }
+        .dummy-info h4 {
+            margin-top: 0;
+            text-align: center;
+        }
+        .dummy-info ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .dummy-info li {
+            margin-bottom: 5px;
+        }
+        /* ▲▲▲ 追加したスタイル ▲▲▲ */
     </style>
 </head>
 <body>
@@ -61,6 +85,16 @@
                 <input type="password" id="pin_code" placeholder="4桁の英数字">
             </div>
             <button id="login-button" class="button button-primary">ログイン</button>
+            
+            <!-- ▼▼▼ ここにダミー情報を追加 ▼▼▼ -->
+            <div class="dummy-info">
+                <h4>【プロトタイプ用ログイン情報】</h4>
+                <ul>
+                    <li>ID: <strong>2101</strong> / PIN: <strong>aB3d</strong> (生徒名: 開成 太郎)</li>
+                    <li>ID: <strong>2205</strong> / PIN: <strong>eF5g</strong> (生徒名: 佐藤 次郎)</li>
+                </ul>
+            </div>
+            <!-- ▲▲▲ ここまで ▲▲▲ -->
         </div>
     </div>
 
